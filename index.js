@@ -4,6 +4,7 @@ const app = express();
 const users = require("./src/routes/userRoute");
 const handleConnecttoDb = require("./src/db/connectDb");
 dotenv.config();
+const PORT = process.env.PORT || 8000;
 handleConnecttoDb()
   .then((res) => {
     console.log("Database connected");
@@ -12,7 +13,8 @@ handleConnecttoDb()
     console.log(err);
   });
 
-app.listen(process.env.PORT, () => {
-  console.log("Hello Application running on port ", process.env.PORT);
+
+app.listen(PORT, () => {
+  console.log("Hello Application running on port ",PORT);
 });
 app.use("/api/v1", users);
