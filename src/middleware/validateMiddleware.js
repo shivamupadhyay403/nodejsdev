@@ -1,24 +1,13 @@
-const validate = (schema, property = 'body') => {
-    return (req, res, next) => {
-        const { error, value } = schema.validate(req[property], {
-            abortEarly: false, // show all errors
-            allowUnknown: false, // reject extra fields
-            stripUnknown: true, // remove unwanted fields
-        })
+const errorHandler = require('../handlers/errorHandler')
 
-        if (error) {
-            return res.status(400).json({
-                message: 'Validation error',
-                errors: error.details.map((err) => ({
-                    field: err.path.join('.'),
-                    message: err.message,
-                })),
-            })
-        }
+const validate = (schema) => (req, res, next) => {
+    const { error } = schema.validate(req.body)
 
-        req[property] = value // sanitized data
-        next()
+    if (error) {
+        return errorHandler(res, null, error.details[0].message, 400)
     }
+
+    next()
 }
 
 module.exports = validate

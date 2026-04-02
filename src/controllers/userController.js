@@ -1,33 +1,14 @@
-// controllers/authController.js
-const { registerSchema, loginSchema } = require('../validators/userValidator')
+const successHandler = require('../handlers/successHandler')
 const asyncHandler = require('express-async-handler')
-const registerUser = async (req, res) => {
-    const { error, value } = registerSchema.validate(req.body, {
-        abortEarly: false,
-    })
+const userService = require('../services/userService')
 
-    if (error) {
-        const errors = error.details.map((d) => d.message)
-        return res.status(400).json({ success: false, errors })
-    }
-
-    // proceed with registration using `value` (sanitized data)
-    // e.g. await User.create(value);
-    res.status(201).json({ success: true, message: 'User registered' })
-}
-
+const registerUser = asyncHandler(async (req, res) => {
+    const user = await userService.register(req.body)
+    successHandler(res, user, 'User registered successfully', 201)
+})
 const loginUser = asyncHandler(async (req, res) => {
-    const { error, value } = loginSchema.validate(req.body, {
-        abortEarly: true,
-    })
-
-    if (error) {
-        const errors = error.details.map((d) => d.message)
-        return res.status(400).json({ success: false, errors })
-    }
-
-    // proceed with login logic using `value`
-    res.status(200).json({ success: true, message: 'Login successful' })
+    const user = await userService.login(req.body)
+    successHandler(res, user, 'User Logged In successfully', 201)
 })
 module.exports = {
     loginUser,

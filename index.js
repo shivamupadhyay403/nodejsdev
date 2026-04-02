@@ -1,12 +1,9 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const app = express()
-
 const users = require('./src/routes/userRoute')
-const errorHandler = require('./src/handlers/errorHandler')
-const successHandler = require('./src/handlers/successHandler')
 const handleConnecttoDb = require('./src/db/connectDb')
-
+const errorMiddleware = require('./src/middleware/errorMiddleware')
 dotenv.config()
 
 const PORT = process.env.PORT || 8000
@@ -14,6 +11,7 @@ const PORT = process.env.PORT || 8000
 // Middleware
 app.use(express.json())
 app.use('/api/v1', users)
+app.use(errorMiddleware)
 
 // DB connect
 handleConnecttoDb()
