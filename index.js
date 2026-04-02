@@ -13,10 +13,6 @@ const PORT = process.env.PORT || 8000
 
 // Middleware
 app.use(express.json())
-
-// Routes
-app.use(errorHandler)
-app.use(successHandler)
 app.use('/api/v1', users)
 
 // DB connect
